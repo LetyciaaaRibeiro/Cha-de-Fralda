@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Chá de Fralda 💜</title>
+<title>Convite Interativo - Chá de Fralda</title>
 
 <style>
 body {
@@ -24,12 +24,10 @@ body {
   animation: cloudMove 70s linear infinite;
   pointer-events: none;
 }
-
 .cloud.second {
   top: 45%;
   animation-delay: 35s;
 }
-
 @keyframes cloudMove {
   from { left: -200px; }
   to { left: 110%; }
@@ -44,36 +42,20 @@ body {
   border-radius: 24px;
   padding: 28px;
   box-shadow: 0 20px 40px rgba(0,0,0,0.12);
-  animation: cardIn 0.9s ease-out;
   position: relative;
 }
 
-@keyframes cardIn {
-  from { opacity: 0; transform: scale(0.95) translateY(20px); }
-  to { opacity: 1; transform: scale(1) translateY(0); }
-}
-
-/* CORAÇÃO */
 .heart {
   position: absolute;
   top: 14px;
   right: 18px;
   font-size: 22px;
-  animation: pulse 1.5s infinite;
-}
-
-@keyframes pulse {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.15); }
-  100% { transform: scale(1); }
 }
 
 h1 {
   text-align: center;
   color: #6b4eff;
-  margin-bottom: 6px;
 }
-
 .subtitle {
   text-align: center;
   color: #888;
@@ -83,12 +65,12 @@ h1 {
 
 input {
   width: 100%;
+  box-sizing: border-box;
   padding: 12px;
   border-radius: 12px;
   border: 1px solid #ccc;
-  margin-bottom: 14px;
+  margin-bottom: 8px;
   font-size: 15px;
-  box-sizing: border-box;
 }
 
 .btn {
@@ -118,6 +100,8 @@ input {
   background: #fff;
   width: 90%;
   max-width: 320px;
+  max-height: 85vh;
+  overflow-y: auto;
   border-radius: 18px;
   padding: 22px;
   text-align: center;
@@ -145,6 +129,22 @@ input {
   border-radius: 10px;
   margin: 8px 0;
   cursor: pointer;
+  transition: 0.2s;
+}
+
+.option.selected {
+  background: #e8e2ff;
+  border: 2px solid #6b4eff;
+  box-shadow: 0 0 0 2px rgba(107,78,255,0.15);
+}
+
+.acomp-row {
+  display: flex;
+  gap: 6px;
+}
+
+.acomp-row input {
+  flex: 1;
 }
 
 .summary {
@@ -164,7 +164,7 @@ input {
   <h1>Chá de Fralda</h1>
   <div class="subtitle">Com muito carinho para o nosso bebê</div>
 
-  <input id="nome" placeholder="Digite seu nome">
+  <input id="nome" placeholder="Digite seu nome completo">
 
   <button class="btn" onclick="abrirLocal()">📍 Local do evento</button>
   <button class="btn" onclick="abrirAcompanhante()">👥 Você levará alguém?</button>
@@ -172,7 +172,7 @@ input {
   <button class="btn" onclick="confirmarPresenca()">⭐ Confirmar presença</button>
 </div>
 
-<!-- MODAL LOCAL -->
+<!-- MODAIS -->
 <div class="modal" id="modalLocal">
   <div class="modal-content">
     <div class="close" onclick="fechar('modalLocal')">✕</div>
@@ -180,95 +180,120 @@ input {
   </div>
 </div>
 
-<!-- MODAL ACOMPANHANTE -->
 <div class="modal" id="modalAcompanhante">
   <div class="modal-content">
     <div class="close" onclick="fechar('modalAcompanhante')">✕</div>
     <h3>Você levará alguém?</h3>
-    <div class="option" onclick="selecionarAcompanhante('Sim')">Sim</div>
-    <div class="option" onclick="selecionarAcompanhante('Não')">Não</div>
+
+    <div class="option" onclick="selecionarQtd(1,this)">1 acompanhante</div>
+    <div class="option" onclick="selecionarQtd(2,this)">2 acompanhantes</div>
+    <div class="option" onclick="selecionarQtd(3,this)">3 acompanhantes ou mais</div>
+    <div class="option" onclick="selecionarQtd(0,this)">Não levarei acompanhante</div>
+
+    <div id="campos"></div>
   </div>
 </div>
 
-<!-- MODAL FRALDA -->
 <div class="modal" id="modalFralda">
   <div class="modal-content">
     <div class="close" onclick="fechar('modalFralda')">✕</div>
     <h3>Qual fralda você vai levar?</h3>
-    <div class="option" onclick="selecionarFralda('P')">Fralda P</div>
-    <div class="option" onclick="selecionarFralda('M')">Fralda M</div>
-    <div class="option" onclick="selecionarFralda('G')">Fralda G</div>
+    <div class="option" onclick="selecionarFralda('P',this)">Fralda P</div>
+    <div class="option" onclick="selecionarFralda('M',this)">Fralda M</div>
+    <div class="option" onclick="selecionarFralda('G',this)">Fralda G</div>
+
+    <strong>+ mimo pra acompanhar!</strong>
+    <p style="font-size:13px">Um carinho extra além das fraldas 💕</p>
   </div>
 </div>
 
-<!-- MODAL RESUMO -->
 <div class="modal" id="modalResumo">
   <div class="modal-content">
-    <h3>Resumo</h3>
+    <div class="close" onclick="fechar('modalResumo')">✕</div>
+    <h3>Resumo da confirmação</h3>
     <div class="summary" id="resumo"></div>
     <button class="btn" onclick="finalizar()">✨ Tudo certo</button>
   </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-<audio id="som">
-  <source src="https://cdn.pixabay.com/audio/2022/03/15/audio_9c86e1b98c.mp3">
-</audio>
-
 <script>
 let fralda = '';
-let acompanhante = '';
+let acompanhantes = [];
 
-const SHEET_URL = "https://script.google.com/macros/library/d/1AL9hh8a3a0iLgPr85v_Qa747EM_-8eArDRCF5qJviowKkE5oHwNYGQSF/5";
+/* 🔴 COLE A URL DO GOOGLE APPS SCRIPT AQUI */
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzbU2SvuNHtqVU3xSAQTTXLBHuQrBv3e7e-UwevhYOQVUUUwJB0iYlhHBvkbUdUJvUW2g/exec";
 
-function abrirLocal(){ document.getElementById('modalLocal').style.display='flex'; }
-function abrirAcompanhante(){ document.getElementById('modalAcompanhante').style.display='flex'; }
-function abrirFralda(){ document.getElementById('modalFralda').style.display='flex'; }
+function abrirLocal(){ modalLocal.style.display='flex'; }
+function abrirAcompanhante(){ modalAcompanhante.style.display='flex'; }
+function abrirFralda(){ modalFralda.style.display='flex'; }
 function fechar(id){ document.getElementById(id).style.display='none'; }
 
-function selecionarAcompanhante(v){
-  acompanhante = v;
-  fechar('modalAcompanhante');
+function limparSelecao(parent){
+  parent.querySelectorAll('.option').forEach(o=>o.classList.remove('selected'));
 }
 
-function selecionarFralda(v){
-  fralda = v;
-  fechar('modalFralda');
+function selecionarQtd(qtd,el){
+  limparSelecao(modalAcompanhante);
+  el.classList.add('selected');
+  campos.innerHTML='';
+  acompanhantes=[];
+
+  for(let i=1;i<=qtd;i++){
+    campos.innerHTML += `
+      <div class="acomp-row">
+        <input placeholder="Nome do acompanhante ${i}">
+        <input type="number" placeholder="Idade">
+      </div>
+    `;
+  }
+}
+
+function selecionarFralda(v,el){
+  limparSelecao(modalFralda);
+  el.classList.add('selected');
+  fralda=v;
 }
 
 function confirmarPresenca(){
   const nome = document.getElementById('nome').value.trim();
-  if(!nome || !fralda || !acompanhante){
-    alert("Preencha tudo antes 😊");
+
+  acompanhantes = [...document.querySelectorAll('.acomp-row')].map(r=>{
+    const [n,i]=r.querySelectorAll('input');
+    return n.value ? `${n.value} (${i.value || 'idade não informada'})` : null;
+  }).filter(Boolean);
+
+  if(!nome || !fralda){
+    alert("Preencha tudo 😊");
     return;
   }
 
-  document.getElementById('resumo').innerHTML = `
+  resumo.innerHTML = `
     <p><strong>Nome:</strong> ${nome}</p>
     <p><strong>Fralda:</strong> ${fralda}</p>
-    <p><strong>Acompanhante:</strong> ${acompanhante}</p>
+    <p><strong>Acompanhantes:</strong><br>${acompanhantes.join('<br>') || 'Nenhum'}</p>
+    <p style="margin-top:10px;color:#6b4eff;">💜 Estamos ansiosos para sua presença!</p>
   `;
-  document.getElementById('modalResumo').style.display='flex';
+
+  modalResumo.style.display='flex';
 }
 
 function finalizar(){
-  const nome = document.getElementById('nome').value;
+  const dados = {
+    nome: document.getElementById('nome').value,
+    fralda: fralda,
+    acompanhantes: acompanhantes.join(" | "),
+    data: new Date().toLocaleString()
+  };
 
-  fetch(SHEET_URL, {
-    method: 'POST',
-    body: JSON.stringify({
-      nome: nome,
-      fralda: fralda,
-      acompanhante: acompanhante
-    })
-  }).then(() => {
-    document.getElementById('som').play();
-    confetti();
-    alert("Presença confirmada 💜");
-    document.getElementById('modalResumo').style.display='none';
-  }).catch(() => {
-    alert("Erro ao enviar 😢");
+  fetch(SCRIPT_URL, {
+    method: "POST",
+    body: JSON.stringify(dados)
   });
+
+  if (navigator.vibrate) navigator.vibrate(120);
+
+  alert("Presença confirmada 💜");
+  fechar('modalResumo');
 }
 </script>
 
