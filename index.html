@@ -14,93 +14,144 @@ body{
   overflow-x:hidden;
 }
 
-/* NUVENS */
+/* ================= NUVENS COM PARALLAX ================= */
 .cloud{
   position:fixed;
-  font-size:80px;
-  opacity:.12;
+  font-size:90px;
+  opacity:.10;
   top:10%;
   left:-200px;
-  animation:cloudMove 60s linear infinite;
+  animation:cloudMove 70s linear infinite;
   z-index:0;
   pointer-events:none;
 }
 .cloud.second{
-  top:50%;
-  animation-delay:30s;
+  top:55%;
+  font-size:70px;
+  opacity:.08;
+  animation-duration:100s;
 }
 @keyframes cloudMove{
   from{left:-200px;}
   to{left:110%;}
 }
 
-/* CARD */
+/* ================= CARD COM BORDA DOURADA ANIMADA ================= */
 .card{
   position:relative;
   z-index:2;
   background:#fff;
   width:90%;
   max-width:380px;
-  margin:80px auto 60px;
-  border-radius:24px;
-  padding:28px;
-  box-shadow:0 20px 40px rgba(0,0,0,.12);
+  margin:160px auto 60px;
+  border-radius:28px;
+  padding:30px;
+  box-shadow:0 22px 45px rgba(0,0,0,.14);
   animation:fade .6s ease;
 }
+
+.card::before{
+  content:"";
+  position:absolute;
+  inset:-2px;
+  border-radius:30px;
+  background:linear-gradient(
+    120deg,
+    #D4AF6A,
+    #FFF2CC,
+    #C2A27A,
+    #D4AF6A
+  );
+  background-size:300% 300%;
+  animation:borderGlow 6s ease infinite;
+  z-index:-1;
+}
+
+@keyframes borderGlow{
+  0%{background-position:0% 50%;}
+  50%{background-position:100% 50%;}
+  100%{background-position:0% 50%;}
+}
+
 @keyframes fade{
   from{opacity:0;transform:translateY(15px);}
   to{opacity:1;transform:none;}
 }
 
-/* URSINHO TOPO */
-.bear{
-  width:140px;
-  height:140px;
-  margin:-100px auto 10px;
-  background:#000;
+/* ================= PARTÍCULAS ================= */
+.top-image{
+  position:absolute;
+  top:-140px;
+  left:50%;
+  transform:translateX(-50%);
+  width:300px;
+  pointer-events:none;
+  z-index:3;
+}
+
+/* partículas douradas */
+.sparkles{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+}
+
+.sparkles span{
+  position:absolute;
+  width:6px;
+  height:6px;
+  background:radial-gradient(circle,#FFDFA0,#D4AF6A);
   border-radius:50%;
-  overflow:hidden;
-  box-shadow:0 15px 30px rgba(0,0,0,.25);
-  animation:bearFloat 3s ease-in-out infinite;
+  opacity:.6;
+  animation:twinkle 4s infinite ease-in-out;
 }
-  
-  .bear img{
-    width:100%;
-    height:100%
-    object-fit:cover;
-}
-@keyframes bearFloat{
-  50%{transform:translateY(-6px);}
+
+.sparkles span:nth-child(1){top:30%;left:20%;animation-delay:0s;}
+.sparkles span:nth-child(2){top:60%;left:70%;animation-delay:1s;}
+.sparkles span:nth-child(3){top:45%;left:40%;animation-delay:2s;}
+.sparkles span:nth-child(4){top:20%;left:60%;animation-delay:3s;}
+
+@keyframes twinkle{
+  0%,100%{transform:scale(.6);opacity:.3;}
+  50%{transform:scale(1.2);opacity:.8;}
 }
 
 .heart{
   position:absolute;
-  top:14px;
-  right:18px;
+  top:18px;
+  right:20px;
   font-size:22px;
   animation:pulse 1.5s infinite;
 }
+
 @keyframes pulse{
   50%{transform:scale(1.15);}
 }
 
-h1{text-align:center;color:#9C7A4F;margin-bottom:6px;}
+h1{
+  text-align:center;
+  color:#9C7A4F;
+  margin-bottom:6px;
+}
+
 .date{
   text-align:center;
   font-size:14px;
   color:#9C7A4F;
   margin-bottom:6px;
 }
+
 .countdown{
   text-align:center;
   font-size:13px;
   color:#888;
   margin-bottom:14px;
 }
+
 .subtitle{
   text-align:center;
   color:#888;
-  margin-bottom:20px;
+  margin-bottom:22px;
   font-size:14px;
 }
 
@@ -114,11 +165,11 @@ input{
   font-size:15px;
 }
 
-/* BOTÕES COM MICRO ANIMAÇÃO */
+/* ================= BOTÕES ================= */
 .btn{
   width:100%;
-  padding:13px;
-  border-radius:14px;
+  padding:14px;
+  border-radius:16px;
   border:none;
   background:linear-gradient(135deg,#D4AF6A,#9C7A4F);
   color:#fff;
@@ -139,8 +190,7 @@ input{
   background:linear-gradient(120deg,transparent,rgba(255,255,255,.4),transparent);
 }
 
-.btn:hover::after,
-.btn:active::after{
+.btn:hover::after{
   animation:shine .8s ease;
 }
 
@@ -149,7 +199,7 @@ input{
   to{left:100%;}
 }
 
-/* MODAIS */
+/* ================= MODAIS ================= */
 .modal{
   display:none;
   position:fixed;
@@ -165,12 +215,11 @@ input{
   max-width:330px;
   max-height:85vh;
   overflow-y:auto;
-  border-radius:18px;
-  padding:22px;
+  border-radius:20px;
+  padding:24px;
   text-align:center;
   position:relative;
 }
-
 .close{
   position:absolute;
   top:10px;
@@ -185,11 +234,10 @@ input{
   cursor:pointer;
   font-weight:bold;
 }
-
 .option{
   background:#F3EADB;
   padding:12px;
-  border-radius:10px;
+  border-radius:12px;
   margin:8px 0;
   cursor:pointer;
 }
@@ -197,13 +245,11 @@ input{
   background:#EAD8B6;
   border:2px solid #C2A27A;
 }
-
 .map{
   border-radius:12px;
   overflow:hidden;
   margin:10px 0;
 }
-
 .summary{text-align:left;font-size:14px;}
 </style>
 </head>
@@ -214,9 +260,14 @@ input{
 <div class="cloud second">☁️</div>
 
 <div class="card">
-  <div class="bear">
-    <img src="ursinho.png" alt="Ursinho Chá de Fralda">
+
+  <!-- partículas no topo -->
+  <div class="top-image">
+    <div class="sparkles">
+      <span></span><span></span><span></span><span></span>
+    </div>
   </div>
+
   <div class="heart">🤎</div>
 
   <h1>Chá de Fralda</h1>
@@ -232,7 +283,7 @@ input{
   <button class="btn" onclick="confirmar()">⭐ Confirmar presença</button>
 </div>
 
-<!-- LOCAL -->
+<!-- MODAIS -->
 <div class="modal" id="local">
   <div class="modal-content">
     <div class="close" onclick="fechar('local')">✕</div>
@@ -247,7 +298,6 @@ input{
   </div>
 </div>
 
-<!-- FRALDA -->
 <div class="modal" id="fralda">
   <div class="modal-content">
     <h3>Qual fralda você vai levar?</h3>
@@ -263,11 +313,9 @@ input{
   </div>
 </div>
 
-<!-- ACOMP -->
 <div class="modal" id="acomp">
   <div class="modal-content">
     <h3>Você levará alguém?</h3>
-
     <div class="option" onclick="setAcomp(0,this)">Não levarei acompanhante</div>
     <div class="option" onclick="setAcomp(1,this)">1 acompanhante</div>
     <div class="option" onclick="setAcomp(2,this)">2 acompanhantes</div>
@@ -279,7 +327,6 @@ input{
   </div>
 </div>
 
-<!-- RESUMO -->
 <div class="modal" id="resumoModal">
   <div class="modal-content">
     <h3>Resumo da confirmação</h3>
@@ -291,8 +338,7 @@ input{
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
 <script>
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby-X8nytInmrH9Qyr3WJpWZfAIyD685KAhOwPkvhzVFyGNr7uBUEJ9XLw5WNmf2ajeeCg/exec";
-
+const SCRIPT_URL="https://script.google.com/macros/s/AKfycby-X8nytInmrH9Qyr3WJpWZfAIyD685KAhOwPkvhzVFyGNr7uBUEJ9XLw5WNmf2ajeeCg/exec";
 let fralda="", acompanhantes=[];
 
 function abrir(id){document.getElementById(id).style.display='flex';}
